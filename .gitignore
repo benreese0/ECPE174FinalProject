@@ -1,4 +1,7 @@
-# Working with Altera Quartus II (Q2) and do proper versioning is not that easy
+#Ben added this as a starting point
+#
+#
+## Working with Altera Quartus II (Q2) and do proper versioning is not that easy
 # but if you follow some rules it can be accomplished. :)
 # This file should be placed into the main directory where the .qpf file is
 # found. Generally Q2 throws all entities and so on in the main directory, but
