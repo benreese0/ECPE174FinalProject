@@ -15,6 +15,7 @@
  * 		PxScore:	Edge trigger when player x scores
  *		PxType:		Type of player (0=human, 1=AI)
  *		Level:		The current level of the game (0-7)
+ *		LCDBusy:	Determines if LCD is currently performing an opeartion
  * Outputs:
  *		PxTotal:	Total score for player x
  *		ASCII:		32-char string to output on LCD
@@ -24,6 +25,7 @@
  
 module score(	input logic clk, reset,
 				input logic P1Score, P2Score, Level, P1Type, P2Type,
+				input logic LCDBusy,
 				output logic [2:0] P1Total, P2Total,
 				output [7:0] ASCII [31:0],
 				output UpdateLCD
