@@ -14,10 +14,11 @@
 `include "constants.sv"
  
  
- module Paddle ( input logic up, down, reset, game_on, wrap_mode, clk,
+ module Paddle(input logic up, down, reset, game_on, wrap_mode, clk,
+					input int ticks_per_px,
 					output logic moving_up, moving_down,
 					output int position);  
-				
+	
 	int ticks;
 	
 	always_ff @(posedge clk or negedge reset) begin
@@ -30,17 +31,17 @@
 		else begin //normal operation
 			//clear ticks if not moving
 			ticks <= (!up && !down)? 0:ticks;
-			if (ticks > PADDLE_TICKS_PER_PIXEL) begin
+			if (ticks > ticks_per_px) begin
 				position<=position +1;;
 				moving_up <= 1'b1;
 				ticks <= 0;
 			end
-			if (-ticks > PADDLE_TICKS_PER_PIXEL) begin
+			if (-ticks > ticks_per_px) begin
 				position <= position +1;
 				moving_down <= 1'b1;
 				ticks <= 0;
 			end
-			if (ticks*ticks < PADDLE_TICKS_PER_PIXEL*PADDLE_TICKS_PER_PIXEL) begin
+			if (ticks*ticks < ticks_per_px * ticks_per_px) begin
 				moving_down <=1'b0;
 				moving_up <=1'b0;
 			end
