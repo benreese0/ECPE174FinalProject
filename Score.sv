@@ -27,7 +27,7 @@ module score(	input logic clk, reset,
 				input logic P1Score, P2Score, Level, P1Type, P2Type,
 				input logic LCDBusy,
 				output logic [2:0] P1Total, P2Total,
-				output [7:0] ASCII [31:0],
+				output [7:0] ASCII [0:31],
 				output UpdateLCD
 			);
 	

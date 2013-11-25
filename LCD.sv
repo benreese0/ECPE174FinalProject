@@ -23,13 +23,13 @@
  ***************************************************************/
  
 module LCD(	input logic clk, reset,
-			input [7:0] ASCII [31:0],
+			input [7:0] ASCII [0:31],
 			input UpdateLCD,
 			output logic Busy,
 			output logic E, RS, RW,
 			output logic [7:0] DB
 			);
-	logic [1:0] setup = 0;
+	logic [2:0] setup = 0;
 	logic [4:0] char = 0;
 	typedef enum logic [2:0] {sSetup_start, sSetup_end, sCursor_start, sCursor_end, sChar, sChar_end} state;
 	state cState, nState;
@@ -48,6 +48,9 @@ module LCD(	input logic clk, reset,
 		end
 		else begin
 			cState <= nState;
+			
+			RW <= 0;
+			Busy <= 1;
 			
 			case(nState)
 				sSetup_start:
