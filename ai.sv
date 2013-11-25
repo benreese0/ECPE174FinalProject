@@ -1,0 +1,36 @@
+/********************************************************
+********* Computer Player aka A.I. **********************
+* This file will be used to have a computer player to 
+* compete against. It will have the ball position as an input
+* and a level 
+
+module compPlayer	(	input int ballY,
+				input logic reset,
+				input logic [1:0] diff,
+				input logic game_on,
+				input logic clk, 
+				output int position,
+				output logic moving_up,
+				output logic moving_down);
+logic goingUp;
+logic goingDown;
+
+
+	Paddle comp(.up(goingUp), .down(goingDown), .reset(reset), .game_on(game_on), .wrap_mode(logic 0), .clk(clk), .ticks_per_px(tickCount));
+	always_comb begin
+		if !reset
+			begin
+				
+			end
+		else if ballY>position
+			begin
+				up<=0;
+				down<=1;
+			end
+		else if ballY<position
+			begin	
+				up<=1;
+				down<=0;
+			end
+		end
+
