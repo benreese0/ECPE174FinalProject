@@ -6,7 +6,6 @@
 
 include "constants.sv"
 
-
 module compPlayer	(	input int ballY,
 				input logic reset,
 				input logic [1:0] diff,
