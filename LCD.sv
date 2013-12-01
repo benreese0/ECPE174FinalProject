@@ -23,9 +23,9 @@
  ***************************************************************/
  
 module LCD(	input logic clk, reset,
-			input [7:0] ASCII [0:31],
-			input UpdateLCD,
-			output logic Busy,
+			input [0:31] [7:0] ASCII,
+			//input UpdateLCD,
+			//output logic Busy,
 			output logic E, RS, RW,
 			output logic [7:0] DB
 			);
@@ -37,7 +37,7 @@ module LCD(	input logic clk, reset,
 	always_ff @(posedge clk or negedge reset)
 	begin
 		if(!reset) begin
-			Busy <= 0;
+			//Busy <= 0;
 			E <= 0;
 			RS <= 0;
 			RW <= 0;
@@ -50,7 +50,7 @@ module LCD(	input logic clk, reset,
 			cState <= nState;
 			
 			RW <= 0;
-			Busy <= 1;
+			//Busy <= 1;
 			
 			case(nState)
 				sSetup_start:
