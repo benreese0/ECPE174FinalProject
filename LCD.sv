@@ -12,9 +12,7 @@
  * 		clk:		Master 50 MHz clock
  * 		reset:		Async active low reset
  *		ASCII:		32-char string to output on LCD
- *		UpdateLCD:	Trigger to indicate data ready for LCD
  * Outputs:
- *		Busy:		The LCD is currenty performing an operation (active high)
  *		E:			Trigger to update LCD (falling-edge)
  *		RS:			Indicate instruction type (0=control, 1=data)
  *		RW:			Read/!Write select, (0=write)
@@ -24,8 +22,6 @@
  
 module LCD(	input logic clk, reset,
 			input [0:31] [7:0] ASCII,
-			//input UpdateLCD,
-			//output logic Busy,
 			output logic E, RS, RW,
 			output logic [7:0] DB
 			);
@@ -37,7 +33,6 @@ module LCD(	input logic clk, reset,
 	always_ff @(posedge clk or negedge reset)
 	begin
 		if(!reset) begin
-			//Busy <= 0;
 			E <= 0;
 			RS <= 0;
 			RW <= 0;
@@ -50,7 +45,6 @@ module LCD(	input logic clk, reset,
 			cState <= nState;
 			
 			RW <= 0;
-			//Busy <= 1;
 			
 			case(nState)
 				sSetup_start:
@@ -72,9 +66,9 @@ module LCD(	input logic clk, reset,
 					E <= 1;
 					RS <= 0;
 					if(char[4])
-						DB <= {1'b1,7'h40+char};
+						DB <= {1'b1,7'h40+char[3:0]};
 					else
-						DB <= {3'b100,char};
+						DB <= {3'b100,char[3:0]};
 				end
 				sCursor_end: E <= 0;
 				sChar:
