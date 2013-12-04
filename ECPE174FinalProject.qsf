@@ -49,10 +49,19 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name SYSTEMVERILOG_FILE audioclockdiv.sv
+set_global_assignment -name VERILOG_FILE Altera_UP_SYNC_FIFO.v
+set_global_assignment -name VERILOG_FILE Altera_UP_Slow_Clock_Generator.v
+set_global_assignment -name VERILOG_FILE Altera_UP_I2C_LCM_Auto_Initialize.v
+set_global_assignment -name VERILOG_FILE Altera_UP_I2C_DC_Auto_Initialize.v
+set_global_assignment -name VERILOG_FILE Altera_UP_I2C_AV_Auto_Initialize.v
+set_global_assignment -name VERILOG_FILE Altera_UP_I2C.v
+set_global_assignment -name VERILOG_FILE Altera_UP_Clock_Edge.v
+set_global_assignment -name VERILOG_FILE Altera_UP_Audio_Out_Serializer.v
+set_global_assignment -name VERILOG_FILE Altera_UP_Audio_In_Deserializer.v
+set_global_assignment -name VERILOG_FILE Altera_UP_Audio_Bit_Counter.v
+set_global_assignment -name VERILOG_FILE clock_generator.v
+set_global_assignment -name VERILOG_FILE audio_codec.v
+set_global_assignment -name VERILOG_FILE audio_and_video_config.v
 set_global_assignment -name SYSTEMVERILOG_FILE Score.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Paddle.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Game_Logic.sv
@@ -60,4 +69,20 @@ set_global_assignment -name SYSTEMVERILOG_FILE Display_Tracking.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Data_Overlay.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Ball.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Audio.sv
+set_global_assignment -name MIF_FILE Score.mif
+set_global_assignment -name MIF_FILE Bounce.mif
+set_global_assignment -name QIP_FILE Score_mem.qip
+set_global_assignment -name QIP_FILE Bounce_mem.qip
+set_global_assignment -name MIF_FILE lvl_up.mif
+set_global_assignment -name QIP_FILE level_up_mem.qip
+set_global_assignment -name SYSTEMVERILOG_FILE Paddle_Test.sv
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH Paddle_Test -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_NAME Paddle_Test -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id Paddle_Test
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Paddle_Test -section_id Paddle_Test
+set_global_assignment -name EDA_TEST_BENCH_FILE Paddle_Test.sv -section_id Paddle_Test
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
