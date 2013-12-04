@@ -21,6 +21,7 @@ int tickCount = 0;
 	always_ff @(posedge clk) begin
 		case(diff)
 		begin
+			2'b00: tickCount<=20000;
 			2'b01: tickCount<=80000;
 			2'b10: tickCount<=40000;
 			2'b11: tickCount<=20000;
@@ -34,6 +35,10 @@ int tickCount = 0;
 			begin
 				
 			end
+		else if diff==2'b00
+			begin
+			end
+
 		else if ballY>position
 			begin
 				goingUp<=0;
