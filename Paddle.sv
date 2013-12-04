@@ -9,19 +9,18 @@
  * Date: 2013-11-08
  ***************************************************************/
 
- const int Y_RESOLUTION = 600;
+
  
  module Paddle(input logic up, down, reset, game_on, wrap_mode, clk,
 					input int ticks_per_px,
 					output logic moving_up, moving_down,
-					output int position,
-					output int ticks);  
+					output int position);  
 	
-	//int ticks;
+	int ticks;
 	
 	always_ff @(posedge clk or negedge reset) begin
 		if (!reset) begin //resetting
-			position <= Y_RESOLUTION/2;
+			position <= 600/2;
 			moving_down <=1'b0;
 			moving_up <=1'b0;
 			ticks = 0;
@@ -47,11 +46,11 @@
 			if (game_on && up) ticks = ticks +1;
 			if (game_on && down) ticks = ticks -1;
 			if (wrap_mode) begin
-				position = (position > Y_RESOLUTION)? 0:position;
-				position = (position < 0)? Y_RESOLUTION :position;
+				position = (position > 600)? 0:position;
+				position = (position < 0)? 600 :position;
 			end
 			else begin
-				position = (position > Y_RESOLUTION)? Y_RESOLUTION:position;
+				position = (position > 600)? 600:position;
 				position = (position < 0)? 0: position;
 			end
 		end
