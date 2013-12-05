@@ -68,7 +68,7 @@ module LCD(	input logic clk, reset,
 					if(char[4])
 						DB <= {1'b1,7'h40+char[3:0]};
 					else
-						DB <= {3'b100,char[3:0]};
+						DB <= {3'b100,char};
 				end
 				sCursor_end: E <= 0;
 				sChar:

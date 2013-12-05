@@ -26,12 +26,13 @@
   3    LVL5    5 
  */
  
- //`define DEBUG
- //`define SIMULATE
+ //`define DEBUG	//Set when testing only this module on board
+ //`define SIMULATE	//Set when simulating in modelsim
  
 module Score(	input logic clk, reset,
 				input logic [2:0] Level,
-				input logic P1Point, P2Point, P1Type, P2Type,
+				input logic P1Point, P2Point,
+				input logic [1:0] P1Type, P2Type,
 				output logic [2:0] P1Total, P2Total,
 				output logic E, RS, RW, ON,
 				output logic [7:0] DB
@@ -42,14 +43,15 @@ module Score(	input logic clk, reset,
 `ifdef SIMULATE
 	LCD LCDdriver(.clk(clk),.reset(reset),.ASCII(ASCII),.E(E),.RS(RS),.RW(RW),.DB(DB));
 `else
-	logic P1SYNC, P2SYNC;
-	synchronizer P1syn(.clk(clk),.X(P1Point),.fall(P1SYNC));
-	synchronizer P2syn(.clk(clk),.X(P2Point),.fall(P2SYNC));
-
 	logic LCDclock;
 	LCDclockdiv LCDdivider(.iclk(clk),.oclk(LCDclock));
 	LCD LCDdriver(.clk(LCDclock),.reset(reset),.ASCII(ASCII),.E(E),.RS(RS),.RW(RW),.DB(DB));
-	
+`endif
+
+`ifdef DEBUG
+	logic P1SYNC, P2SYNC;
+	synchronizer P1syn(.clk(clk),.X(P1Point),.fall(P1SYNC));
+	synchronizer P2syn(.clk(clk),.X(P2Point),.fall(P2SYNC));
 `endif
 	
 	
@@ -74,10 +76,10 @@ module Score(	input logic clk, reset,
 			
 			//line 1:
 			ASCII[0:3] <= "P1: ";
-			ASCII[4:5] <= P1Type ? "CP" : "HU";
+			ASCII[4:5] <= !P1Type ? "HU" : "CP";
 			ASCII[6:9] <= "    ";
 			ASCII[10:13] <= "P2: ";
-			ASCII[14:15] <= P2Type ? "CP" : "HU";
+			ASCII[14:15] <= !P2Type ? "HU" : "CP";
 			//line 2:
 			ASCII[16] <= " ";
 			ASCII[17] <= P1Total+48;
