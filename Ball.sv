@@ -27,8 +27,8 @@
         reg ball_move_x, ball_move_y;                         
         
         //constants
-        const int X_RESOLUTION = 800;
-        const int Y_RESOLUTION = 600;
+        const int X_RESOLUTION = 640;
+        const int Y_RESOLUTION = 480;
         
         //velocity
         localparam BALL_V = 10'd1;

@@ -10,10 +10,10 @@
  * Date: 2013-11-08
  ***************************************************************/
  module Game_Logic(input logic clk,game_on,reset, input logic joystickup1, joystickup2, joystickdown1,joystickdown2,
-						output logic moving_up1, moving_up2, moving_down1, moving_down2, output int ballx, bally,
+						output logic moving_up1, moving_up2, moving_down1, moving_down2,
 					   output logic [2:0] P1Total, P2Total, output logic E, RS, RW, ON, output logic [7:0] DB, input logic [1:0] diff1, diff2, 
 						output I2C_SCLK, inout I2C_SDAT, output AUD_XCK, input AUD_DACLRCK, input AUD_ADCLRCK, input AUD_BCLK,
-						input AUD_ADCDAT, output AUD_DACDAT, input logic quadA, quadB, output logic vga_h_sync, vga_v_sync,
+						input AUD_ADCDAT, output AUD_DACDAT, output logic vga_clk, vga_h_sync, vga_v_sync, vga_n_sync, vga_n_blank,
 						vgaRed, vgaBlue, vgaGreen);
 						
 //missing (wires)	ball: paddle_position1, paddle_position2
@@ -25,7 +25,8 @@
  logic gameOn;
  logic lvl_up;
  logic [2:0] level;
- wire playerPoint1, playerPoint2,compPosition1, compPosition2, wallHit, paddleHit;
+ logic playerPoint1, playerPoint2, wallHit, paddleHit;
+ int compPosition1, compPosition2, ballx, bally;
  
  compPlayer computer1(.ballY(bally), .reset(rst), .diff(diff1), .game_on(gameOn), .clk(clk), .up(joystickup1), .down(joystickdown1), 
                       .position(compPosition1), .going_Up(moving_up1), .going_Down(moving_down1));
@@ -42,10 +43,11 @@
 
  Score points(.clk(clk), .reset(rst), .Level(level), .P1Point(playerPoint1), .P2Point(playerPoint2), .P1Type(diff1), .P2Type(diff2),
               .P1Total(P1Total), .P2Total(P2Total), .E(E), .RS(RS), .RW(RW), .ON(ON), .DB(DB)); 
-
- //vga needs paddle positions, ballx and bally
- PongVGA gameboard(.clk(clk), .quadA(quadA), .quadB(quadB), .vga_h_sync(vga_h_sync), .vga_v_sync(vga_v_sync), 
-					    .vgaRed(vgaRed), .vgaBlue(vgaBlue), .vgaGreen(vgaGreen));
+				  
+ int VGA_X, VGA_Y;
+ logic disp_en;
+ vga vga1(.clk50(clk),.H_SYNC(vga_h_sync),.V_SYNC(vga_v_sync),.N_SYNC(vga_n_sync),.N_BLANK(vga_n_blank),.VGA_CLOCK(vga_clk),.DISP_EN(disp_en),.XPOS(VGA_X),.YPOS(VGA_Y));
+ display disp1(.VGA_CLOCK(vga_clk),.XPOS(VGA_X),.YPOS(VGA_Y),.DISP_EN(disp_en),.R(vgaRed),.B(vgaBlue),.G(vgaGreen),.PADDLE1Y(compPosition1),.PADDLE2Y(compPosition2),.BALLX(ballx),.BALLY(bally));
 										  
 	
 // if someone wins level up! also make level up sound							  
