@@ -97,4 +97,11 @@ set_global_assignment -name SYSTEMVERILOG_FILE Game_Logic.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Data_Overlay.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Ball.sv
 set_global_assignment -name SYSTEMVERILOG_FILE Audio.sv
+set_location_assignment PIN_G19 -to cnt[3]
+set_location_assignment PIN_F19 -to cnt[2]
+set_location_assignment PIN_E19 -to cnt[1]
+set_location_assignment PIN_F21 -to cnt[0]
+set_global_assignment -name SYSTEMVERILOG_FILE paddle2.sv
+set_global_assignment -name SMART_RECOMPILE ON
+set_location_assignment PIN_AC27 -to wrapping
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

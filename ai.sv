@@ -9,7 +9,7 @@ include "constants.sv"*/
 module compPlayer	(	input int ballY,
 				input logic reset,
 				input logic [1:0] diff,
-				input logic game_on,
+				input logic game_on, wrapping,
 				input logic clk, humanUp, humanDown,
 				output int position,
 				output logic moving_up,
@@ -17,20 +17,21 @@ module compPlayer	(	input int ballY,
 logic goingUp;
 logic goingDown;
 int tickCount = 0;
-logic wrapping = 0;
+//logic wrapping = 1;
 
 	
 	always_ff @(posedge clk)
 		case(diff)
-			2'b00: tickCount<=200000;
-			2'b01: tickCount<=800000;
-			2'b10: tickCount<=400000;
-			2'b11: tickCount<=200000;
+			2'b00: tickCount<=100000;
+			2'b01: tickCount<=400000;
+			2'b10: tickCount<=200000;
+			2'b11: tickCount<=100000;
 		endcase
 
+	assign moving_up = goingUp;
+	assign moving_down = goingDown;
 
-
-	Paddle comp(.up(goingUp), .down(goingDown), .reset(reset), .game_on(game_on), .wrap_mode(wrapping), .clk(clk), .ticks_per_px(tickCount));
+	Paddle2 comp(.up(goingUp), .down(goingDown), .reset(reset), .game_on(game_on), .wrap_mode(wrapping), .clk(clk), .ticks_per_px(tickCount), .position(position));
 	always_comb begin
 		if(!reset)
 			begin
