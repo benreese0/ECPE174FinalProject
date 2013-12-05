@@ -9,10 +9,9 @@
  * Author:Jennifer Valencia
  * Date: 2013-11-08
  ***************************************************************/
- module GameLogic(input logic clk,game_on,reset, input logic joystickup1, joystickup2, joystickdown1,joystickdown2,
+ module Game_Logic(input logic clk,game_on,reset, input logic joystickup1, joystickup2, joystickdown1,joystickdown2,
 						output logic moving_up1, moving_up2, moving_down1, moving_down2, output int ballx, bally,
-						input logic [2:0] Level, input logic P1Point, P2Point, P1Type, P2Type, output logic [2:0] P1Total,
-						P2Total, output logic E, RS, RW, ON, output logic [7:0] DB, input logic [1:0] diff1, diff2, 
+					   output logic [2:0] P1Total, P2Total, output logic E, RS, RW, ON, output logic [7:0] DB, input logic [1:0] diff1, diff2, 
 						output I2C_SCLK, inout I2C_SDAT, output AUD_XCK, input AUD_DACLRCK, input AUD_ADCLRCK, input AUD_BCLK,
 						input AUD_ADCDAT, output AUD_DACDAT, input logic quadA, quadB, output logic vga_h_sync, vga_v_sync,
 						vgaRed, vgaBlue, vgaGreen);
@@ -25,6 +24,7 @@
  logic rst;
  logic gameOn;
  logic lvl_up;
+ logic [2:0] level;
  wire playerPoint1, playerPoint2,compPosition1, compPosition2, wallHit, paddleHit;
  
  compPlayer computer1(.ballY(bally), .reset(rst), .diff(diff1), .game_on(gameOn), .clk(clk), .up(joystickup1), .down(joystickdown1), 
