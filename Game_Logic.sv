@@ -10,8 +10,7 @@
  * Date: 2013-11-08
  ***************************************************************/
  module Game_Logic(input logic clk,game_on,reset, input logic joystickup1, joystickup2, joystickdown1,joystickdown2,
-						output logic moving_up1, moving_up2, moving_down1, moving_down2,
-					   output logic [2:0] P1Total, P2Total, output logic E, RS, RW, ON, output logic [7:0] DB, input logic [1:0] diff1, diff2, 
+					   output logic [2:0] P1Total, P2Total, output logic LCD_E, LCD_RS, LCD_RW, LCD_ON, output logic [7:0] LCD_DB, input logic [1:0] diff1, diff2, 
 						output I2C_SCLK, inout I2C_SDAT, output AUD_XCK, input AUD_DACLRCK, input AUD_ADCLRCK, input AUD_BCLK,
 						input AUD_ADCDAT, output AUD_DACDAT, output logic vga_clk, vga_h_sync, vga_v_sync, vga_n_sync, vga_n_blank,
 						vgaRed, vgaBlue, vgaGreen);
@@ -27,22 +26,26 @@
  logic [2:0] level;
  logic playerPoint1, playerPoint2, wallHit, paddleHit;
  int compPosition1, compPosition2, ballx, bally;
+ logic ball_clk;
+ logic rstball;
  
- compPlayer computer1(.ballY(bally), .reset(rst), .diff(diff1), .game_on(gameOn), .clk(clk), .up(joystickup1), .down(joystickdown1), 
-                      .position(compPosition1), .going_Up(moving_up1), .going_Down(moving_down1));
+ hclockdiv ballc(.iclk(clk),.oclk(ball_clk));
  
- compPlayer computer2(.ballY(bally), .reset(rst), .diff(diff2), .game_on(gameOn), .clk(clk), .up(joystickup2), .down(joystickdown2), 
-                      .position(compPosition2), .going_Up(moving_up2), .going_Down(moving_down2));
+ compPlayer computer1(.ballY(bally), .reset(rst), .diff(diff1), .game_on(gameOn), .clk(clk), .humanUp(~joystickup1), .humanDown(~joystickdown1), 
+                      .position(compPosition1));
+ 
+ compPlayer computer2(.ballY(bally), .reset(rst), .diff(diff2), .game_on(gameOn), .clk(clk), .humanUp(~joystickup2), .humanDown(~joystickdown2), 
+                      .position(compPosition2));
 							 
- Ball gameball(.clk(clk), .reset(rst),.game_on(gameOn), .paddle_position1(compPosition1), .paddle_position2(compPosition2),
+ Ball gameball(.clk(ball_clk), .reset(rstball),.game_on(gameOn), .paddle_position1(compPosition1), .paddle_position2(compPosition2),
 					.ball_x(ballx), .ball_y(bally), .wall_hit(wallHit), .paddle_hit(paddleHit), .player1_point(playerPoint1), .player2_point(playerPoint2));
 
- Audio sound(.wall_hit(wallHit), .paddle_hit(paddleHit), .point(playerPoint1 | playerPoint2), .win(P1Total | P2Total == 7), .lvl_up(lvl_up), .clk(clk),
+ /*Audio sound(.wall_hit(wallHit), .paddle_hit(paddleHit), .point(playerPoint1 | playerPoint2), .win(P1Total | P2Total == 7), .lvl_up(lvl_up), .clk(clk),
 				 .rst(rst), .I2C_SCLK(I2C_SCLK), .I2C_SDAT(I2C_SDAT), .AUD_XCK(AUD_XCK), .AUD_DACLRCK(AUD_DACLRCK), .AUD_ADCLRCK(AUD_ADCLRCK), 
-				 .AUD_BCLK(AUD_BCLK), .AUD_ADCDAT(AUD_ADCDAT), .AUD_DACDAT(AUD_DACDAT));
+				 .AUD_BCLK(AUD_BCLK), .AUD_ADCDAT(AUD_ADCDAT), .AUD_DACDAT(AUD_DACDAT));*/
 
  Score points(.clk(clk), .reset(rst), .Level(level), .P1Point(playerPoint1), .P2Point(playerPoint2), .P1Type(diff1), .P2Type(diff2),
-              .P1Total(P1Total), .P2Total(P2Total), .E(E), .RS(RS), .RW(RW), .ON(ON), .DB(DB)); 
+              .P1Total(P1Total), .P2Total(P2Total), .E(LCD_E), .RS(LCD_RS), .RW(LCD_RW), .ON(LCD_ON), .DB(LCD_DB)); 
 				  
  int VGA_X, VGA_Y;
  logic disp_en;
@@ -54,21 +57,34 @@
 	always_ff @ (posedge clk or negedge reset) begin
 		if (!reset) begin
 			rst <= 1'b0;
+			rstball <= 1'b0;
 			gameOn <= 1'b1;
+			level <= 3'b0;
 		end
 	
-		else if (game_on && P1Total == 7 | P2Total == 7) begin
-			lvl_up <= 1'b1;
-			level <= level + 1'b1;
-			rst <= 1'b0;
-			gameOn <= 1'b1;
+		else begin
+			rst <= 1'b1;
+			if(playerPoint1 || playerPoint2)
+			begin
+				rstball <= 1'b0;
+			end else begin
+				rstball <= 1'b1;
+			end
+			if (game_on && (P1Total == 7 || P2Total == 7)) begin
+				lvl_up <= 1'b1;
+				level <= level + 1'b1;
+				gameOn <= 1'b1;
+			end
+		
+			else if (game_on <= 1'b0) begin
+				lvl_up <= 1'b1;
+				gameOn <= 1'b0;
+			end
+			else begin
+				lvl_up <= 1'b1;
+				gameOn <= 1'b1;
+			end
 		end
-	
-		else if (game_on <= 1'b0) begin
-			gameOn <= 1'b0;
-		end
-		else 
-			gameOn <= 1'b1;
 	
 	end	
 					

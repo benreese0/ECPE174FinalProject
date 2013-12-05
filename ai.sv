@@ -22,10 +22,10 @@ logic wrapping = 0;
 	
 	always_ff @(posedge clk)
 		case(diff)
-			2'b00: tickCount<=20000;
-			2'b01: tickCount<=80000;
-			2'b10: tickCount<=40000;
-			2'b11: tickCount<=20000;
+			2'b00: tickCount<=200000;
+			2'b01: tickCount<=800000;
+			2'b10: tickCount<=400000;
+			2'b11: tickCount<=200000;
 		endcase
 
 

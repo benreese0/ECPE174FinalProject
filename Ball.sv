@@ -24,7 +24,7 @@
  module Ball(input logic clk, reset,game_on, input int paddle_position1, paddle_position2,
                                  output int ball_x, ball_y, output logic wall_hit, paddle_hit, player1_point, player2_point);
         
-        reg ball_move_x, ball_move_y;                         
+        logic ball_move_x, ball_move_y;                         
         
         //constants
         const int X_RESOLUTION = 640;
@@ -51,25 +51,30 @@
                         // ball move
 								if (ball_move_x && game_on) 
                                 ball_x = ball_x + BALL_V;
-								else 
+								else if(game_on)
                                 ball_x = ball_x - BALL_V;
 								if (ball_move_y && game_on) 
                                 ball_y = ball_y + BALL_V;
-								else 
+								else if(game_on)
                                 ball_y = ball_y - BALL_V;
                         
                         // collision detect
                         //The "+ 5" adds a few pixels so that the ball will for sure detect the collision
-								if (ball_x <= 0 + 5) begin
-									ball_move_x = ~ball_move_x;
+								if (ball_y <=5) begin
+									ball_move_y <= 1'b1;
+									ball_y <= 5;
 									wall_hit <= 1'b1;
-                        end                 
-                                         
-                        if (ball_x <= X_RESOLUTION - 5) begin
-									ball_move_x = ~ball_move_x;
+                        end              
+                        else if (ball_y >= Y_RESOLUTION - 5) begin
+									ball_move_y <= 1'b0;
+									ball_y <= Y_RESOLUTION-5;
                            wall_hit <= 1'b1;
-                        end                 
-								if (ball_y <= paddle_position1 + 5) begin
+                        end else begin
+									wall_hit <= 1'b0;
+								end
+
+								/*
+								if (ball_x <= paddle_position1 + 5) begin
 									ball_move_y = ~ball_move_y;
                            paddle_hit <= 1'b1;
                         end                 
@@ -78,12 +83,13 @@
 									ball_move_y = ~ball_move_y;
                            paddle_hit <= 1'b1;
                         end
+								*/
                         
                         //score detect
-                        if (ball_y <= 0)
+                        if (ball_x <= 0)
                                 player1_point <= 1'b1;
                         
-                        if (ball_y <= Y_RESOLUTION)
+                        if (ball_x >= X_RESOLUTION)
                                 player2_point <= 1'b1;
                                 
                 end
