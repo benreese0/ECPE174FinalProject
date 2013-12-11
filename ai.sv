@@ -22,7 +22,7 @@ int tickCount = 0;
 	
 	always_ff @(posedge clk)
 		case(diff)
-			2'b00: tickCount<=100000;
+			2'b00: tickCount<=50000;
 			2'b01: tickCount<=400000;
 			2'b10: tickCount<=200000;
 			2'b11: tickCount<=100000;

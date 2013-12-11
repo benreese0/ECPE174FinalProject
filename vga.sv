@@ -1,3 +1,6 @@
+//VGA code based on VHDL and timing diagrams from
+// http://eewiki.net/pages/viewpage.action?pageId=15925278
+
 module vga(input logic clk50, output logic H_SYNC, V_SYNC, N_SYNC, N_BLANK, VGA_CLOCK, DISP_EN, output int XPOS, YPOS);
 
 	//logic clk25;
